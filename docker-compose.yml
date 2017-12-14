@@ -1,0 +1,9 @@
+mservices:
+    image: tp33/django
+    container_name: mservices
+    volumes:
+      - ./s_mservices:/app
+    ports:
+      - "8000:8000"
+    command: bash -c "echo \"starting micro services server...\" && 
+                mod_wsgi-express start-server --working-directory /app --reload-on-changes /app/s_mservices/wsgi.py"
