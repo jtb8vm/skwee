@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mservices',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +73,8 @@ WSGI_APPLICATION = 's_mservices.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
+
+# skwee: leaving default SQLite here for ease of use
 
 DATABASES = {
     'default': {

@@ -6,4 +6,4 @@ mservices:
     ports:
       - "8000:8000"
     command: bash -c "echo \"starting micro services server...\" && 
-                mod_wsgi-express start-server --working-directory /app --reload-on-changes /app/s_mservices/wsgi.py"
+                python manage.py runserver 0.0.0.0:8000"
