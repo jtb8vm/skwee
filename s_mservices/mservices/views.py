@@ -47,7 +47,24 @@ def post_url(request):
 @csrf_exempt
 def redirect(request, shortname):
 	if request.method == "GET":
-		return success_response(shortname)
+		# lookup the shortname
+		try:
+			url = Url.objects.get(short_name=shortname)
+			url_dict = model_to_dict(url)
+
+			# redirect to the url based on platform (using django user agents)
+			if (request.user_agent.is_mobile):
+				return success_response(url_dict["mobile_target"])
+
+			if (request.user_agent.is_tablet):
+				return success_response(url_dict["tablet_target"])
+
+			if(request.user_agent.is_pc):
+				return success_response(url_dict["desktop_target"])
+
+			return success_response(request.user_agent.is_mobile)
+		except:
+			return error_response("Shortened url not found.")
 	else:
 		return error_response("invalid HTTP method type")
 
