@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.forms import model_to_dict
+from django.utils import timezone
 from mservices.models import Url
 from mservices.forms import CreateShortenedURL
 import string
@@ -75,6 +76,21 @@ def redirect(request, shortname):
 def get_urls(request):
 	if request.method == "GET":
 		urls = Url.objects.all().values()
+		for url in urls:
+
+			# generate the 'time since created' field
+			created = (timezone.now()-url["time_created"])
+			sec = created.total_seconds()
+			min = int(sec // 60)
+			hour = int(min // 60)
+			day = int(hour // 24)
+
+			min = int(min % 60)
+			hour = int(hour % 60)
+			sec = int(sec % 60)
+
+			time_since = "{}d {}h {}m {}s"
+			url["time_since_created"] = time_since.format(day, hour, min, sec)
 		return success_response([url for url in urls])
 	else:
 		return error_response("invalid HTTP method type")
