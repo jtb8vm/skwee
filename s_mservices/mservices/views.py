@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.forms import model_to_dict
 from mservices.models import Url
@@ -54,17 +54,17 @@ def redirect(request, shortname):
 
 			# redirect to the url based on platform (using django user agents)
 			if (request.user_agent.is_mobile):
-				return success_response(url_dict["mobile_target"])
+				return HttpResponseRedirect(url_dict["mobile_target"])
 
 			if (request.user_agent.is_tablet):
-				return success_response(url_dict["tablet_target"])
+				return HttpResponseRedirect(url_dict["tablet_target"])
 
 			if(request.user_agent.is_pc):
-				return success_response(url_dict["desktop_target"])
+				return HttpResponseRedirect(url_dict["desktop_target"])
 
-			return success_response(request.user_agent.is_mobile)
-		except:
-			return error_response("Shortened url not found.")
+			return error_response("Unsupported platform.")
+		except Exception as e:
+			return error_response(str(type(e)))
 	else:
 		return error_response("invalid HTTP method type")
 
