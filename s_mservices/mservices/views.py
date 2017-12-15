@@ -51,17 +51,17 @@ def redirect(request, shortname):
 			url_dict = model_to_dict(url)
 
 			# redirect to the url based on platform (using django user agents)
-			if (request.user_agent.is_mobile):
+			if (request.user_agent.is_mobile and url_dict["mobile_target"]):
 				url.mobile_redirects += 1  # increment the redirect count
 				url.save()
 				return HttpResponseRedirect(url_dict["mobile_target"])
 
-			if (request.user_agent.is_tablet):
+			elif (request.user_agent.is_tablet and url_dict["tablet_target"]):
 				url.tablet_redirects += 1
 				url.save()
 				return HttpResponseRedirect(url_dict["tablet_target"])
 
-			if(request.user_agent.is_pc):
+			else:
 				url.desktop_redirects += 1
 				url.save()
 				return HttpResponseRedirect(url_dict["desktop_target"])
@@ -92,5 +92,17 @@ def get_urls(request):
 			time_since = "{}d {}h {}m {}s"
 			url["time_since_created"] = time_since.format(day, hour, min, sec)
 		return success_response([url for url in urls])
+	else:
+		return error_response("invalid HTTP method type")
+
+@csrf_exempt
+def delete_url(request, id):
+	if request.method == "POST":
+		try:
+			url = Url.objects.get(id=id)
+		except:
+			return error_response("url with id {} does not exist.".format(id))
+		url.delete()
+		return success_response("url with id {} deleted".format(id))
 	else:
 		return error_response("invalid HTTP method type")
