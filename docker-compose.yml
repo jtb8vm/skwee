@@ -5,5 +5,8 @@ mservices:
       - ./s_mservices:/app
     ports:
       - "8000:8000"
-    command: bash -c "echo \"starting micro services server...\" && 
-                mod_wsgi-express start-server --working-directory /app --reload-on-changes /app/s_mservices/wsgi.py"
+    command: bash -c "echo \"installing dependencies...\" && 
+                pip install pyyaml ua-parser user-agents &&
+                pip install django-user-agents &&
+                echo \"starting micro services server...\" &&
+                python manage.py runserver 0.0.0.0:8000"
