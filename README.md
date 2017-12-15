@@ -12,8 +12,8 @@ skwee: a url shortener with platform detection.
 
 ## Testing
 - Throughout development I used Google's Postman REST client and Django Unit tests to check functionality
-- The Unit tests are run by default in the `docker-compose` file
-   - To run the tests for yourself, open a separate docker terminal after running `docker-compose up`
+   - A postman collection is included if you so desire to test with Postman.
+   - To run the Django unit tests, open a separate docker terminal after running `docker-compose up`
    - In the separate terminal, do `docker exec -it mservices bash`
    - Once inside of the microservices container, do `python manage.py test`
 
